@@ -77,7 +77,7 @@ EXEC=exec
 DEBUGCONF=$HERE/dist/etc/cvmfs/default.d/00-debug.conf
 if [ "$SINGCVMFS_LOGLEVEL" = "debug" ]; then
     CVMFSDEBUG="-o debug"
-    echo "CVMFS_DEBUGLOG=/var/log/cvmfs/@fqrn@-debug.log" >$DEBUGCONF
+    echo "CVMFS_DEBUGLOG=${SINGCVMFS_LOGDIR:-/var/log/cvmfs}/@fqrn@-debug.log" >$DEBUGCONF
     # would rather not leave this around because it interferes with
     #  use of cvmfsexec in same directory.
     EXEC=""
@@ -102,10 +102,10 @@ if [ -n "$SINGCVMFS_OPTSFILE" ]; then
 fi
 
 echo "CVMFS_NFILES=`ulimit -Hn`" >etc/cvmfs/default.d/00-nfiles.conf
-echo "CVMFS_USYSLOG=/var/log/cvmfs/@fqrn@.log" >etc/cvmfs/default.d/00-usyslog.conf
+echo "CVMFS_USYSLOG=${SINGCVMFS_LOGDIR:-/var/log/cvmfs}/@fqrn@.log" >etc/cvmfs/default.d/00-usyslog.conf
 LOGDIR=$HERE/log
 mkdir -p $LOGDIR
-SINGULARITY_BINDPATH="$SINGULARITY_BINDPATH,$LOGDIR:/var/log/cvmfs"
+SINGULARITY_BINDPATH="$SINGULARITY_BINDPATH,$LOGDIR:${SINGCVMFS_LOGDIR:-/var/log/cvmfs}"
 
 for P in `find * ! -type d ! -path '*/doc/*' ! -path 'var/lib/cvmfs/*'| \
         sed 's,/cvmfs/.*,/cvmfs,'|uniq`; do
