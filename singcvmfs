@@ -167,7 +167,7 @@ then
     $EXEC singularity $SINGGLOBALOPTS $SINGCMD $SINGINSTCMD "$@"
 else
     $EXEC singularity $SINGGLOBALOPTS $SINGCMD $SINGINSTCMD \
-        -S /var/run/cvmfs -B $CACHEBIND \
+        -S ${SINGCVMFS_RUNDIR:-/var/run/cvmfs} -B $CACHEBIND \
         "${MOUNT_ARGS[@]}" ${SINGCVMFS_SINGOPTS[@]} $SINGCVMFS_IMAGE "$@"
 fi
 
